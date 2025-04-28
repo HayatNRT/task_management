@@ -1,17 +1,14 @@
 package com.nrt.tms.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AuthResponse {
     private String accessToken;
-    private String refreshToken;
     private String role;
 }
 

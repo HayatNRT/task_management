@@ -2,6 +2,7 @@ package com.nrt.tms.config;
 
 import com.nrt.tms.filter.JwtAuthenticationFilter;
 import com.nrt.tms.service.JwtService;
+import com.nrt.tms.service.impl.JwtServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +24,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityConfig {
-    private static final String[] WHITE_LIST_URL = {"/api/tms/auth/**"};
+    private static final String[] WHITE_LIST_URL = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/v1/auth/**"};
     private final AuthenticationProvider authenticationProvider;
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtService;
     private final UserDetailsService userDetailsService;
 
 

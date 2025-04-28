@@ -1,6 +1,7 @@
 package com.nrt.tms.config;
 
-import com.nrt.tms.repository.UserRepository;
+import com.nrt.tms.repository.ApplicationUserRepository;
+import com.nrt.tms.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,23 +11,24 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return userEmail -> (org.springframework.security.core.userdetails.UserDetails)
-                userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User Not Found"));
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return username -> (org.springframework.security.core.userdetails.UserDetails)
+//                userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User Not Found"));
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -37,8 +39,12 @@ public class ApplicationConfig {
         return config.getAuthenticationManager();
     }
 
+    //    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 }

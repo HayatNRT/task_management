@@ -23,14 +23,14 @@ public abstract class BaseEntity {
 
     @CreatedBy
     @Column(updatable = false)
-    protected Long createdBy;
+    protected String createdBy;
 
     @CreatedDate
     @Column(updatable = false)
     protected LocalDateTime createdDate;
 
     @LastModifiedBy
-    protected Long lastModifiedBy;
+    protected String lastModifiedBy;
 
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;

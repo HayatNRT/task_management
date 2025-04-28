@@ -1,60 +1,38 @@
 package com.nrt.tms.service.impl;
 
+import com.nrt.tms.config.CustomUserDetail;
 import com.nrt.tms.dto.AuthRequest;
 import com.nrt.tms.dto.AuthResponse;
-import com.nrt.tms.dto.RegisterRequest;
-import com.nrt.tms.entity.User;
-import com.nrt.tms.repository.UserRepository;
+import com.nrt.tms.repository.ApplicationUserRepository;
 import com.nrt.tms.service.AuthService;
 import com.nrt.tms.service.JwtService;
-import com.nrt.tms.util.Role;
+import com.nrt.tms.util.AppConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final ApplicationUserRepository userRepository;
     private final JwtService jwtService;
-
-    public AuthResponse register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("User already exists.");
-        }
-        Role role = request.getRole().equalsIgnoreCase("ROLE_MEMBER") ? Role.MEMBER :
-                request.getRole().equalsIgnoreCase("ROLE_MANAGER") ? Role.MANAGER :
-                        request.getRole().equalsIgnoreCase("ROLE_TEAM_LEAD") ? Role.TEAM_LEAD :
-                                null;
+    private final AuthenticationManager authenticationManager;
 
 
-        User user = User.builder().email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-                .fullName(request.getFullName()).role(role).active(true).build();
-
-        userRepository.save(user);
-
-        String token = jwtService.generateToken(user);
-        String refresh = jwtService.generateRefreshToken(user);
-
-        return new AuthResponse(token, refresh, user.getRole().name());
-    }
-
+    @Override
     public AuthResponse login(AuthRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Authentication authentication = authenticationManager.
+                authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid credentials");
-        }
+        CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
 
-        String token = jwtService.generateToken(user);
-        String refresh = jwtService.generateRefreshToken(user);
+        String jwtToken = jwtService.generateToken(userDetails, request.getStatus().equalsIgnoreCase("WEB") ? AppConstants.Status.WEB : AppConstants.Status.MOB);
 
-        return new AuthResponse(token, refresh, user.getRole().name());
+        return AuthResponse.builder().accessToken(jwtToken).build();
     }
 }
+
 

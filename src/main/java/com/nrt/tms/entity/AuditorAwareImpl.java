@@ -1,20 +1,25 @@
 package com.nrt.tms.entity;
 
+import com.nrt.tms.config.CustomUserDetail;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class AuditorAwareImpl implements AuditorAware<Long> {
+public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
-    public Optional<Long> getCurrentAuditor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Optional.of(0L);
+    public Optional<String> getCurrentAuditor() {
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal instanceof CustomUserDetail) {
+                CustomUserDetail customUserDetail = (CustomUserDetail) principal;
+                ApplicationUser applicationUser = customUserDetail.getUser();
+                return Optional.ofNullable(applicationUser.getUid());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        User user = (User) authentication.getPrincipal();
-        return Optional.of(user.getId());
+        return Optional.empty();
     }
 }

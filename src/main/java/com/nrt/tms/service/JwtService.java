@@ -1,30 +1,24 @@
 package com.nrt.tms.service;
 
+import com.nrt.tms.util.AppConstants;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
 public interface JwtService {
 
-    String extractUsername(String token);
+    String getUsernameFromToken(String token);
 
-    <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 
-    String generateToken(UserDetails userDetails);
+    String generateToken(UserDetails userDetails, AppConstants.Status status);
 
-    String generateToken(Map<String, Object> extraClaims, UserDetails userDetails);
+    String doGenerateToken(Map<String, Object> claims, String subject, AppConstants.Status status);
 
-    String generateRefreshToken(UserDetails userDetails);
+    Date getExpirationDateFromToken(String token);
 
-    String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration);
+    <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver);
 
-    boolean isTokenValid(String token, UserDetails userDetails);
-
-    boolean isTokenExpired(String token);
-
-    String extractRole(String token);
-
-    String extractPlatform(String token);
 }

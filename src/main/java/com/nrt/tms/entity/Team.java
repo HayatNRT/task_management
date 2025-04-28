@@ -17,4 +17,5 @@ public class Team extends BaseEntity {
     private User teamLead;
     @OneToMany(mappedBy = "team")
     private List<User> teamMembers;
+
 }

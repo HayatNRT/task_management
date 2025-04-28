@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaginationInfo {
-    private int totalPages;
-    private int currentPage;
-    private int totalElements;
-    private int pageSize;
+    private long totalPages;
+    private long currentPage;
+    private long totalElements;
+    private long pageSize;
 }
