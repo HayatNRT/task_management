@@ -10,12 +10,11 @@ public class ProjectCodeGenerator {
     public static String generateProjectCode(String projectName) {
         String clientPrefix = "NRT";
 
-        int year = LocalDate.now().getYear();
 
         String input = projectName + "-" + System.currentTimeMillis();
         String hashFragment = generateShortHash(input);
 
-        return String.format("%s-%d-%s", clientPrefix, year, hashFragment);
+        return clientPrefix + "-" + hashFragment;
     }
 
     private static String generateShortHash(String input) {

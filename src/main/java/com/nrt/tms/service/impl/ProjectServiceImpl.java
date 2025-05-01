@@ -3,10 +3,13 @@ package com.nrt.tms.service.impl;
 import com.nrt.tms.dto.ProjectRequest;
 import com.nrt.tms.dto.ProjectResponse;
 import com.nrt.tms.entity.Project;
+import com.nrt.tms.exception.ServiceException;
 import com.nrt.tms.repository.ProjectRepository;
 import com.nrt.tms.service.ProjectService;
 import com.nrt.tms.util.ProjectPriority;
 import com.nrt.tms.util.ProjectStatus;
+import com.nrt.tms.util.ProjectVisibility;
+import com.nrt.tms.util.ResponseKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,9 +43,30 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectResponse updateProjectByProjectCode(String projectCode, ProjectRequest project) {
-//        projectRepository.findProjectByProjectCode(projectCode).orElseThrow(()->)
-        return null;
+    @Transactional
+    public ProjectResponse updateProjectByProjectCode(String projectCode, ProjectRequest projectRequest) {
+        Project project = projectRepository.findProjectByProjectCode(projectCode)
+                .orElseThrow(() -> new ServiceException(ResponseKeys.CLIENT_RESOURCE_NOT_FOUND, "Project with code " + projectCode + " not found"));
+        project.setProjectName(projectRequest.getProjectName());
+        project.setStatus(projectRequest.getStatus().equalsIgnoreCase("ACTIVE") ? ProjectStatus.ACTIVE : projectRequest.getStatus().equalsIgnoreCase("DRAFT") ? ProjectStatus.DRAFT : ProjectStatus.ON_HOLD);
+        project.setPriority(projectRequest.getPriority().equalsIgnoreCase("LOW") ? ProjectPriority.LOW : projectRequest.getPriority().equalsIgnoreCase("MEDIUM") ? ProjectPriority.MEDIUM : ProjectPriority.HIGH);
+        project.setDescription(projectRequest.getDescription());
+        project.setStartDate(projectRequest.getStartDate());
+        project.setEndDate(projectRequest.getEndDate());
+        project.setClientName(projectRequest.getClientName());
+        project.setDescription(projectRequest.getDescription());
+        project.setVisibility(ProjectVisibility.TEAM_ASSIGNED);
+        return buildResponse(projectRepository.save(project));
+    }
+
+    @Override
+    @Transactional
+    public void deleteProjectByProjectCode(String projectCode) {
+        Project project = projectRepository.findProjectByProjectCode(projectCode)
+                .orElseThrow(() -> new ServiceException(ResponseKeys.CLIENT_RESOURCE_NOT_FOUND, "Project with code " + projectCode + " not found"));
+        project.setActive(false);
+        projectRepository.save(project);
+
     }
 
 
@@ -72,7 +96,9 @@ public class ProjectServiceImpl implements ProjectService {
         response.setPriority(project.getPriority().name());
         response.setClientName(project.getClientName());
         response.setActive(project.getActive());
+        response.setCreatedOn(project.getCreatedDate());
         response.setTotalResources(project.getTotalResources());
+        response.setCreatedBy(project.getCreatedBy());
         return response;
 
     }

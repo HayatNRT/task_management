@@ -1,6 +1,5 @@
 package com.nrt.tms.dto;
 
-import com.nrt.tms.util.Role;
 import lombok.Getter;
 import lombok.Setter;
 

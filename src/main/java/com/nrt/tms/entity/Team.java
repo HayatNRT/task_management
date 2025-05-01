@@ -1,10 +1,11 @@
 package com.nrt.tms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -12,10 +13,16 @@ import java.util.List;
 public class Team extends BaseEntity {
 
     private String teamName;
-    @ManyToOne
-    @JoinColumn(name = "team_lead_id")
-    private User teamLead;
+
+    private String description;
+    @JsonIgnore
+    @OneToOne(mappedBy = "team")
+    private Board board;
+    @JsonIgnore
+    @OneToMany(mappedBy = "team",fetch = FetchType.EAGER)
+    private Set<TeamMemberShip> teamMemberShip;
     @OneToMany(mappedBy = "team")
-    private List<User> teamMembers;
+    private Set<Task> tasks;
+
 
 }

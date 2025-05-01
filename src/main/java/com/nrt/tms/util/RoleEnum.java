@@ -3,9 +3,9 @@ package com.nrt.tms.util;
 import lombok.Getter;
 
 @Getter
-public enum Role {
+public enum RoleEnum {
     MEMBER,
     TEAM_LEAD,
-    MANAGER,
+    ADMIN,
 }
 

@@ -32,5 +32,6 @@ public class ProjectRequest {
     private String status;
 
     private String clientName;
+    private String visibility;
 }
 

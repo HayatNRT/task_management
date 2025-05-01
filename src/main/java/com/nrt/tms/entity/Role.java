@@ -11,23 +11,21 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name="roles")
-public class Role implements Serializable{
-    /**
-     *
-     */
+@Table(name = "roles")
+public class Role implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     public Role(Long roleId) {
-        this.roleId=roleId;
+        this.roleId = roleId;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_role_generator")
-    @SequenceGenerator(name="user_role_generator", sequenceName = "users_role_seq", initialValue = 10000 ,allocationSize = 1)
+    @SequenceGenerator(name = "user_role_generator", sequenceName = "users_role_seq", initialValue = 10000, allocationSize = 1)
     private Long roleId;
 
-    @Column(name = "roleName",unique = true)
+    @Column(name = "roleName", unique = true)
     private String roleName;
 
     @JsonIgnore

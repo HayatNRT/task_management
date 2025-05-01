@@ -3,6 +3,7 @@ package com.nrt.tms.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nrt.tms.util.ProjectPriority;
 import com.nrt.tms.util.ProjectStatus;
+import com.nrt.tms.util.ProjectVisibility;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,9 @@ public class Project extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
+    @Enumerated(EnumType.STRING)
+    private ProjectVisibility visibility = ProjectVisibility.PUBLIC_ACCESSIBLE;
+
 }
 
 

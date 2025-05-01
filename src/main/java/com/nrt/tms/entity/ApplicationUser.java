@@ -41,14 +41,12 @@ public class ApplicationUser implements Serializable {
 
     private String contactNo;
 
-//	@ManyToOne(fetch = FetchType.EAGER)
+    //	@ManyToOne(fetch = FetchType.EAGER)
 //	@JoinColumn(name = "designation_Id", referencedColumnName = "desId")
 //	private Designation designation;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-
 
 
 }

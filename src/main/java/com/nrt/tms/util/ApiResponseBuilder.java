@@ -1,6 +1,5 @@
 package com.nrt.tms.util;
 
-import com.nrt.tms.dto.ProjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,13 @@ public class ApiResponseBuilder {
         return ResponseEntity.ok(new ApiResponse<>(resolver.get(key), data, true));
     }
 
+
     public <T> ResponseEntity<ApiResponse<T>> okWithPagination(String key, T data, Page<?> page) {
         return ResponseEntity.ok(new ApiResponse<>(resolver.get(key), data, true, buildPaginationInfo(page)));
     }
 
-    public ResponseEntity<ApiResponse<String>> error(String key, Exception e, HttpStatus status) {
-        return ResponseEntity.status(status).body(new ApiResponse<>(resolver.get(key), e.getMessage(), false));
+    public ResponseEntity<ApiResponse<Void>> ok(String key) {
+        return ResponseEntity.ok(new ApiResponse<>(resolver.get(key), null, true));
     }
 
     private PaginationInfo buildPaginationInfo(Page<?> page) {

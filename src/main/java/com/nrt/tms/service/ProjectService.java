@@ -11,4 +11,6 @@ public interface ProjectService {
     Page<ProjectResponse> getAllProjects(int page, int size);
 
     ProjectResponse updateProjectByProjectCode(String projectCode, ProjectRequest project);
+
+    void deleteProjectByProjectCode(String projectCode);
 }

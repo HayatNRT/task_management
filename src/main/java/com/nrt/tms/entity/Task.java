@@ -19,17 +19,19 @@ public class Task extends BaseEntity {
     private TaskStatus taskStatus;
     @Enumerated(EnumType.STRING)
     private Priority priority;
-
     private LocalDate dueDate;
-    @ManyToOne
-    @JoinColumn(name = "sprint_id")
-    private Sprint sprint;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
     @ManyToOne
     @JoinColumn(name = "assigned_user_id")
-    private User assignedUser;
+    private Employee assignedUser;
     @OneToMany(mappedBy = "task")
     private List<Comment> comments;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 }

@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "employee2")
@@ -326,4 +328,6 @@ public class Employee implements Serializable {
     private StaffType staffType;
 
     private LocalDate confirmationDate;
+//    @ManyToMany(mappedBy = "employees")
+//    private Set<Team> teams;
 }

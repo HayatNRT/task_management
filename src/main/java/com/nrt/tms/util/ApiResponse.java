@@ -20,6 +20,7 @@ public class ApiResponse<T> {
         this.isOkay = isOkay;
     }
 
+
     public ApiResponse(ResponseCode responseCode, T response, boolean isOkay, PaginationInfo paginationInfo) {
         this(responseCode, response, isOkay);
         this.paginationInfo = paginationInfo;

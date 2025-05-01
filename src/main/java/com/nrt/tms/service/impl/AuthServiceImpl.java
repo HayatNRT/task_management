@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
 
         String jwtToken = jwtService.generateToken(userDetails, request.getStatus().equalsIgnoreCase("WEB") ? AppConstants.Status.WEB : AppConstants.Status.MOB);
 
-        return AuthResponse.builder().accessToken(jwtToken).build();
+        return new AuthResponse(jwtToken, userDetails.getUsername(), userDetails.getUser().getUid());
     }
 }
 
